@@ -954,7 +954,7 @@ Solver::Prepare(void)
                 if (outputStep()) {
                     silent_cout("Dummy Step(" << lStep << ") t=" << dTime + dCurrTimeStep << " dt=" << dCurrTimeStep << std::endl);
                 }
-
+                
 		ASSERT(pFirstDummyStep != 0);
 
 		/* Setup SolutionManager(s) */
@@ -1053,7 +1053,7 @@ Solver::Prepare(void)
                         if (outputStep()) {
                             silent_cout("Dummy Step(" << iSubStep << ") t=" << dTime + dCurrTimeStep << " dt=" << dCurrTimeStep << std::endl);
                         }
-
+                        
 			pCurrStepIntegrator = pDummySteps;
 			ASSERT(pDummySteps!= 0);
 			try {
@@ -1389,47 +1389,12 @@ Solver::Advance(void)
 			<< "output in file \"" << sOutputFileName << "\"" << std::endl
 			<< "total iterations: " << iTotIter << std::endl
 			<< "total Jacobian matrices: " << pNLS->TotalAssembledJacobian() << std::endl
-			<< "total error: " << dTotErr << std::endl << std::endl);
-
-		silent_cout(outputCounterPrefix << "###################################################################" << std::endl);
-		silent_cout(outputCounterPrefix<< "Just adding print out some message as a test for GSoC2019 porpouse" << std::endl);
+			<< "total error: " << dTotErr << std::endl);
 
 		if (pRTSolver) {
 			pRTSolver->Log();
 		}
 
-		std::string strMbd(sInputFileName.c_str());
-		std::string strname = strMbd.substr (0, strMbd.size()-4);     // "think"
-
-		char cstr[strname.size() + 1];
-		strcpy(cstr, strname.c_str());	// or pass &s[0]
-
-		char str[100];
-	  strcpy (str,cstr);
-	  strcat (str,".out");
-	  puts (str);
-
-		// Eri for Entry Test
-		char strcommand[100], strcommandColor[100];
-		strcpy (strcommand,"plot \"./");
-		strcat (strcommand,str);
-		strcat (strcommand,"\"u 3:6");
-		strcpy (strcommandColor, strcommand);
-		strcat (strcommandColor," w lp title 'data'");
-
-		gnuplotpipe = popen("gnuplot -persist","w");
-		silent_cout(outputCounterPrefix << std::endl << "Openning Log File and executing gnuplot:  " << strcommand);
-		fprintf(gnuplotpipe, "%s\n", "set border linewidth 1.5");
-		fprintf(gnuplotpipe, "%s\n", "set terminal wxt size 350,262 enhanced font 'Verdana,10' persist");
-		fprintf(gnuplotpipe, "%s\n", "set xlabel 'Times, s'");
-		fprintf(gnuplotpipe, "%s\n", "set ylabel 'dTest'");
-		fprintf(gnuplotpipe, "%s\n", "set term png");
-		fprintf(gnuplotpipe, "%s\n", "set output \"ResErr_out.png\" ");
-		fprintf(gnuplotpipe, "%s\n", strcommandColor);
-   	pclose(gnuplotpipe);
-		silent_cout(outputCounterPrefix << std::endl << "Printing Log File:  " << strcommand);
-		silent_cout(outputCounterPrefix << std::endl << "Closing Log File :  " << strcommand << std::endl);
-		silent_cout(outputCounterPrefix << std::endl << "###################################################################");
 		return false;
 
 	} else if (pRTSolver && pRTSolver->IsStopCommanded()) {
@@ -4959,7 +4924,7 @@ Solver::Eig(bool bNewLine)
 			} else {
 				postfix_ss << uCurr;
 			}
-
+			
 			pDM->OutputEigOpen(postfix_ss.str());
 			pDM->OutputEigParams(dTime, h/2., uCurr, EigAn.iResultsPrecision);
 		}
