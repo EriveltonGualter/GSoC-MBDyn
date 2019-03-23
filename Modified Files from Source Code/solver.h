@@ -70,6 +70,12 @@ class Solver;
 #include "rtsolver.h"
 #include "TimeStepControl.h"
 
+// Eri for Entry Test
+#include <iostream>
+#include <fstream>
+#include <stdio.h>
+using namespace std;
+
 extern "C" int mbdyn_stop_at_end_of_iteration(void);
 extern "C" int mbdyn_stop_at_end_of_time_step(void);
 extern "C" void mbdyn_set_stop_at_end_of_iteration(void);
@@ -98,6 +104,8 @@ public:
   	};
 
 protected:
+  // Eri for Entry Test
+  FILE *gnuplotpipe;
 #ifdef USE_MULTITHREAD
 	unsigned nThreads;
 
