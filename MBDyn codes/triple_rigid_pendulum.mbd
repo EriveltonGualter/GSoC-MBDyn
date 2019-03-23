@@ -1,0 +1,107 @@
+# double_rigid_pendulum.mbd
+
+begin: data;
+   problem: initial value;
+end: data;
+
+begin: initial value;
+   initial time:   0.;
+   final time:     10.;
+   time step:      1.e-3;
+   max iterations: 10;
+   tolerance:      1.e-6;
+end: initial value;
+
+begin: control data;
+   structural nodes: 3;
+   rigid bodies:     3;
+   joints:           3;
+   gravity;
+end: control data;
+
+# Design Variables
+set: real M = .5;         # Mass of Links
+set: real L = .5;         # Length of Links
+set: real I = M*L^2./12.; # Moment of Inertia of Link
+
+# Node Labels
+set: integer Node_Link1 = 1;
+set: integer Node_Link2 = 2;
+set: integer Node_Link3 = 3;
+
+# Body Labels
+set: integer Body_Link1 = 1;
+set: integer Body_Link2 = 2;
+set: integer Body_Link3 = 3;
+
+# Joint Labels
+set: integer JoRevp_Link1       	= 1;
+set: integer JoRevh_Link1_Link2 	= 2;
+set: integer JoRevh_Link2_Link3 	= 3;
+
+begin: nodes;
+   structural: Node_Link1, dynamic,
+      1./2.*L, 0., 0., # absolute position
+      eye,             # absolute orientation
+      null,            # absolute velocity
+      null;            # absolute angular velocity
+
+   structural: Node_Link2, dynamic,
+      L, 0., 1./2.*L,        # absolute position
+      euler, 0., -pi/2., 0., # absolute orientation
+      null,                  # absolute velocity
+      null;                  # absolute angular velocity
+
+   structural: Node_Link3, dynamic,
+      2*L, 0., 1./2.*L,      # absolute position
+      euler, 0., -pi/2., 0., # absolute orientation
+      null,                  # absolute velocity
+      null;                  # absolute angular velocity
+
+end: nodes;
+
+begin: elements;
+   body: Body_Link1, Node_Link1,
+      M,                                # mass
+      null,                             # relative center of mass
+      diag, 0., M*L^2./12., M*L^2./12.; # inertia matrix
+
+   body: Body_Link2, Node_Link2,
+      M,                                # mass
+      null,                             # relative center of mass
+      diag, 0., M*L^2./12., M*L^2./12.; # inertia matrix
+
+   body: Body_Link3, Node_Link3,
+      M,                                # mass
+      null,                             # relative center of mass
+      diag, 0., M*L^2./12., M*L^2./12.; # inertia matrix
+
+   joint: JoRevp_Link1,
+      revolute pin,
+         Node_Link1,
+            -1./2.*L, 0., 0.,                    # relative offset
+            hinge, 1, 1., 0., 0., 3, 0., 1., 0., # relative axis orientation
+            null,                                # absolute pin position
+            hinge, 1, 1., 0., 0., 3, 0., 1., 0.; # absolute pin orientation
+
+   joint: JoRevh_Link1_Link2,
+      revolute hinge,
+         Node_Link1,
+            1./2.*L, 0., 0.,                     # relative offset
+            hinge, 1, 1., 0., 0., 3, 0., 1., 0., # relative axis orientation
+         Node_Link2,
+            -1./2.*L, 0., 0.,                    # relative offset
+            hinge, 1, 1., 0., 0., 3, 0., 1., 0.; # relative axis orientation
+
+  joint: JoRevh_Link2_Link3,
+     revolute hinge,
+        Node_Link2,
+           1./2.*L, 0., 0.,                     # relative offset
+           hinge, 1, 1., 0., 0., 3, 0., 1., 0., # relative axis orientation
+        Node_Link3,
+           -1./2.*L, 0., 0.,                    # relative offset
+           hinge, 1, 1., 0., 0., 3, 0., 1., 0.; # relative axis orientation
+
+   gravity: 0., 0., -1., const, 9.81;
+
+end: elements;
