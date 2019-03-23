@@ -1,5 +1,4 @@
-GSoC-MBDyn
-###########
+# MBDyn Entry Test Repository
 
 This repository is part of the entry test to participate in the Google Summer of Code 2019 under the [MBDyn organization](https://www.mbdyn.org/)
 
