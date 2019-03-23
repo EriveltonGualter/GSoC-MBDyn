@@ -1,13 +1,9 @@
 GSoC-MBDyn
 ###########
 
-This repository is part of the entry test to participate in the Google Summer of Code 2019 under the `MBDyn organization`_.
+This repository is part of the entry test to participate in the Google Summer of Code 2019 under the [MBDyn organization](https://www.mbdyn.org/)
 
-.. MBDyn organization: https://www.mbdyn.org/
-
-A detailed information about the entry test can be found `in this page`_.
-
-.. in this page: https://eriveltongualter.github.io/GSoC2019-MBDyn/
+A detailed information about the entry test can be found in [this page](https://eriveltongualter.github.io/GSoC2019-MBDyn/)
 
 Unfortunally, I was not able to fork the following repository: https://public.gitlab.polimi.it/DAER/mbdyn. Then, I just added the modified files in this repo under the folder *Modified Files from Source Code*, which are:
 
