@@ -1,0 +1,35 @@
+# free_falling_body.mbd
+
+# Structutes for any MBDyn code:
+/* data
+<problem>
+control data
+nodes
+elements */
+
+begin: data;
+   problem: initial value;  % Type of the problem
+end: data;
+
+begin: initial value;
+   initial time: 0.;
+   final time: 1.;
+   time step: 1.e-3;
+   max iterations: 10;
+   tolerance: 1.e-6;
+end: initial value;
+
+begin: control data;
+   structural nodes: 1;
+   rigid bodies: 1;
+   gravity;
+end: control data;
+
+begin: nodes;
+   structural: 1, dynamic, null, eye, 0., 3., 0., null;
+end: nodes;
+
+begin: elements;
+   body: 1, 1, 1., null, eye;
+   gravity: 0., 0., -1., const, 9.81;
+end: elements;
