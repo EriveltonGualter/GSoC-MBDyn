@@ -4,9 +4,8 @@ This repository contains files cited on [GSoC 2019 MBDyn blog](https://erivelton
 
 So far, this repository contains:
 
-- [Entry Test](https://eriveltongualter.github.io/GSoC2019-MBDyn/entry-test.html) files used during my application;
-- Beam codes using MBDyn native language.
-
+- Entry Test/ Files used during my [application](https://eriveltongualter.github.io/GSoC2019-MBDyn/entry-test.html);
+- Beam Scripts/ Beam codes using MBDyn native language.
 
 Mentors for this projects:
 - Paolo Mantegazza
