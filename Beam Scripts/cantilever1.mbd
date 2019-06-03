@@ -1,12 +1,12 @@
 # $Header: /var/cvs/mbdyn/mbdyn/mbdyn-web/documentation/examples/cantilever1,v 1.4 2009/07/04 17:36:08 masarati Exp $
 
 /*
-Notes: 
- - The majority of codes I found uses an initial value problem formulation
- - Time array: 0:1e-3:1 with mx itrations of 10 and tolerance 1e-6
- - Two Nodes at control data
+Notes:
+ - NUmerical Integration
+ - Time array: 0:1e-3:1 with max itrations of 10 and tolerance 1e-6
+ - Read directly by the driver program
+ - "initial value": Formulated as Differential-Algebraic Equations (DAE)
 */
-
 begin: data;
 	problem: initial value;
 end: data;
@@ -20,8 +20,21 @@ begin: initial value;
 	tolerance: 1.e-6;
 end: initial value;
 
+/*
+Control Data:
+	The following is declared the elements blocks:
+		- structural NODES (Types of a Node: structural, electric, abstract, parameter, hydraulic)
+		- rigid BODIES,
+		- joints,
+		- beams,
+		- forces.
+
+	<item_list> ::= <item> [ , ... ]
+	<item> ::= { rigid bodies | gravity | forces | beams | aerodynamic elements | loadable elements }
+*/
 begin: control data;
-	structural nodes:
+
+	structural nodes: # To simulate the motions of N rigid bodies, we need N structural nodes.
 		+1    # clamped node
 		+2    # other nodes
 	;
@@ -44,6 +57,7 @@ set: real j = 1.e-2;
 set: real L = .5;
 
 begin: nodes;
+  # structural: <node label>, dynamic or static, <position>, <orientation>, <velocity>, <angular velocity> ;
 	structural: 1, static,
 		null,
 		eye,

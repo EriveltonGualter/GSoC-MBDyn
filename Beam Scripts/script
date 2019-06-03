@@ -1,0 +1,2 @@
+export PATH=${PATH}:/usr/local/mbdyn/bin/
+mbdyn -f cantilever1.mbd

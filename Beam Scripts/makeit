@@ -1,0 +1,5 @@
+cd /home/erivelton/GSoC2019/GSoC-MBDyn/mbdyn-develop
+
+./configure
+make -j4
+sudo make install
