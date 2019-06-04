@@ -2151,7 +2151,7 @@ ReadBeam(DataManager* pDM, MBDynParser& HP, unsigned int uLabel)
 		DEBUGLCOUT(MYDEBUG_INPUT, "Piezo matrix II:" << std::endl << PiezoMat[0][1] << PiezoMat[1][1]);
 #endif /* 0 */
 	}
-
+	
 	OrientationDescription od = UNKNOWN_ORIENTATION_DESCRIPTION;
 	unsigned uFlags = Beam::OUTPUT_NONE;
 	ReadOptionalBeamCustomOutput(pDM, HP, uLabel, Type, uFlags, od);
@@ -2241,6 +2241,26 @@ ReadBeam(DataManager* pDM, MBDynParser& HP, unsigned int uLabel)
 					PiezoMat[0][1], PiezoMat[1][1],
 					od, fOut));
 		}
+	}
+
+	/*Automatic Mass*/
+	// vDUP: Value Density per Unity Lenght
+	doublereal vDUP(0.);
+	// mOff: Mass Offset
+	Vec3 mOff(Zero3);
+
+	if (HP.IsKeyWord("automatic" "mass")) {
+		vDUP = HP.GetReal();
+		
+		mOff[0] = HP.GetReal();
+		mOff[1] = HP.GetReal();
+		mOff[2] = HP.GetReal();
+		
+		#ifdef DEBUG
+			DEBUGCOUT("Setting Automatic Mass" << std::endl << 
+					"reading Value Density per Unity Lenght: " << vDUP <<  std::endl <<
+					"reading Mass offset: " << mOff << std::endl);
+		#endif
 	}
 
 	/* Costruttore normale
