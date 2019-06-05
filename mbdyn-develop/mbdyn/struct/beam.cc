@@ -2253,9 +2253,17 @@ ReadBeam(DataManager* pDM, MBDynParser& HP, unsigned int uLabel)
 		vDUP = HP.GetReal();
 		
 		mOff[0] = HP.GetReal();
-		mOff[1] = HP.GetReal();
-		mOff[2] = HP.GetReal();
 		
+		if (HP.IsKeyWord("same")) 
+			mOff[1] = mOff[0];
+		else
+			mOff[1] = HP.GetReal();
+
+		if (HP.IsKeyWord("same")) 
+		 	mOff[2] = mOff[1];
+		else
+			mOff[2] = HP.GetReal();	
+				
 		#ifdef DEBUG
 			DEBUGCOUT("Setting Automatic Mass" << std::endl << 
 					"reading Value Density per Unity Lenght: " << vDUP <<  std::endl <<
