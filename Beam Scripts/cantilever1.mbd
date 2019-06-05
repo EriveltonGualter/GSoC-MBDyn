@@ -90,7 +90,7 @@ begin: elements;
 		-(L/8.), 0., 0.,
 		diag, (L/4.)*j, 1./12.*(L/4.)^3*m, 1./12.*(L/4.)^3*m;
 
-	beam: 1,
+	beam3: 1,
 		1, null,
 		2, null,
 		3, null,
@@ -98,7 +98,10 @@ begin: elements;
 		linear elastic generic,
 			diag, 1.e9, 1.e9, 1.e9, 1.e4, 1.e4, 1.e5,
 		same,
-		same;
+		same,
+		automatic mass,
+		1.2,
+		1., 2., 3.;
 
 	/*
 	# constant absolute force in node 3
