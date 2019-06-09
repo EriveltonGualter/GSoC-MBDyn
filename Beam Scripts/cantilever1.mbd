@@ -80,12 +80,12 @@ end: nodes;
 begin: elements;
 	joint: 1, clamp, 1, node, node;
 
-	body: 2, 2,
+	body: 21, 2,
 		(L/2.)*m,
 		null,
 		diag, (L/2.)*j, 1./12.*(L/2.)^3*m, 1./12.*(L/2.)^3*m;
 
-	body: 3, 3,
+	body: 31, 3,
 		(L/4.)*m,
 		-(L/8.), 0., 0.,
 		diag, (L/4.)*j, 1./12.*(L/4.)^3*m, 1./12.*(L/4.)^3*m;
@@ -100,8 +100,8 @@ begin: elements;
 		same,
 		same,
 		automatic mass,
-		1.2,
-		1., 2., 3.;
+		1.2,					// value_of_density_per_unit_length
+		1., 2., 3.;		// mass offset (a vector)
 
 	/*
 	# constant absolute force in node 3
