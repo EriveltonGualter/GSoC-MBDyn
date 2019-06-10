@@ -100,8 +100,8 @@ begin: elements;
 		same,
 		same,
 		automatic mass,
-		1.2,					// value_of_density_per_unit_length
-		1., 2., 3.;		// mass offset (a vector)
+		1.2,					# value_of_density_per_unit_length
+		1., 2., 3.;		# mass offset (a vector)
 
 	/*
 	# constant absolute force in node 3
