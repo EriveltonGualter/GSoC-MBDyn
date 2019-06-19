@@ -2264,31 +2264,23 @@ ReadBeam(DataManager* pDM, MBDynParser& HP, unsigned int uLabel)
 	doublereal vDUP(0.);
 	// mOff: Center of Mass Offset
 	Vec3 mOff(Zero3);
-
+	
 	if (HP.IsKeyWord("inertia")) {
 		vDUP = HP.GetReal();	
-		silent_cerr("Inertia" << vDUP << std::endl );
+		silent_cerr("Mass per unit span: " << vDUP << std::endl );
 	}
 
 	if (HP.IsKeyWord("position")) {
-		mOff[0] = HP.GetReal();
-
-		if (HP.IsKeyWord("same")) 
-			mOff[1] = mOff[0];
-		else
-			mOff[1] = HP.GetReal();
-
-		if (HP.IsKeyWord("same")) 
-			mOff[2] = mOff[1];
-		else
-			mOff[2] = HP.GetReal();	
+		mOff = HP.GetPosRel(ReferenceFrame(pNode1));
 	}
 
-	// TODO: Add Inertia Tensor			
+	// inertia tensor per unit span, wrt/ the center of mass
+	Mat3x3 iTUS(HP.GetMat3x3Sym());
 
 	silent_cerr("disp: Setting Automatic Mass" << std::endl << 
 				"disp: Reading Value Density per Unity Lenght: " << vDUP <<  std::endl <<
-				"disp: Reading Mass offset: " << mOff << std::endl);
+				"disp: Reading Mass offset: " << mOff << std::endl << 
+				"disp: Inertia Tensor per Unit Space: " << iTUS << std::endl);
 
 	#ifdef DEBUG
 		DEBUGCOUT("Setting Automatic Mass" << std::endl << 
