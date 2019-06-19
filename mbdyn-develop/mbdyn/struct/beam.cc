@@ -1949,14 +1949,6 @@ ReadBeam(DataManager* pDM, MBDynParser& HP, unsigned int uLabel)
 {
 	DEBUGCOUTFNAME("ReadBeam");
 
-	bool bStaticModel = pDM->bIsStaticModel();
-	bool bInverseDynamics = pDM->bIsInverseDynamics();
-	#ifdef DEBUG
-		DEBUGLCOUT("bStaticModel: " << bStaticModel << std::endl <<	
-				"bInverseDynamics: " << bInverseDynamics <<std::endl);
-	#endif
-
-
 	/* Per ogni nodo: */
 
 	/* Nodo 1 */
@@ -1981,9 +1973,7 @@ ReadBeam(DataManager* pDM, MBDynParser& HP, unsigned int uLabel)
 		<< pNode1->GetXCurr()+pNode1->GetRCurr()*f1 << std::endl);
 
 	/* Nodo 2 */
-	const StructDispNode *pStrDispNode2 = pDM->ReadNode<const StructDispNode, Node::STRUCTURAL>(HP);
-	const StructNode *pNode2 = dynamic_cast<const StructNode *>(pStrDispNode2);
-	// const StructNode* pNode2 = pDM->ReadNode<const StructNode, Node::STRUCTURAL>(HP);
+	const StructNode* pNode2 = pDM->ReadNode<const StructNode, Node::STRUCTURAL>(HP);
 
 	Mat3x3 R2(pNode2->GetRCurr());
 	if (HP.IsKeyWord("position")) {
@@ -2002,9 +1992,7 @@ ReadBeam(DataManager* pDM, MBDynParser& HP, unsigned int uLabel)
 		<< pNode2->GetXCurr()+pNode2->GetRCurr()*f2 << std::endl);
 
 	/* Nodo 3 */
-	const StructDispNode *pStrDispNode3 = pDM->ReadNode<const StructDispNode, Node::STRUCTURAL>(HP);
-	const StructNode *pNode3 = dynamic_cast<const StructNode *>(pStrDispNode3);
-	// const StructNode* pNode3 = pDM->ReadNode<const StructNode, Node::STRUCTURAL>(HP);
+	const StructNode* pNode3 = pDM->ReadNode<const StructNode, Node::STRUCTURAL>(HP);
 
 	Mat3x3 R3(pNode3->GetRCurr());
 	if (HP.IsKeyWord("position")) {
@@ -2167,7 +2155,7 @@ ReadBeam(DataManager* pDM, MBDynParser& HP, unsigned int uLabel)
 		DEBUGLCOUT(MYDEBUG_INPUT, "Piezo matrix II:" << std::endl << PiezoMat[0][1] << PiezoMat[1][1]);
 #endif /* 0 */
 	}
-	
+
 	OrientationDescription od = UNKNOWN_ORIENTATION_DESCRIPTION;
 	unsigned uFlags = Beam::OUTPUT_NONE;
 	ReadOptionalBeamCustomOutput(pDM, HP, uLabel, Type, uFlags, od);
@@ -2258,7 +2246,6 @@ ReadBeam(DataManager* pDM, MBDynParser& HP, unsigned int uLabel)
 					od, fOut));
 		}
 	}
-
 	/*Automatic Mass*/
 	// vDUP: Value Density per Unity Lenght
 	doublereal vDUP(0.);
@@ -2278,96 +2265,36 @@ ReadBeam(DataManager* pDM, MBDynParser& HP, unsigned int uLabel)
 	Mat3x3 iTUS(HP.GetMat3x3Sym());
 
 	silent_cerr("disp: Setting Automatic Mass" << std::endl << 
-				"disp: Reading Value Density per Unity Lenght: " << vDUP <<  std::endl <<
-				"disp: Reading Mass offset: " << mOff << std::endl << 
-				"disp: Inertia Tensor per Unit Space: " << iTUS << std::endl);
+			"disp: Reading Value Density per Unity Lenght: " << vDUP <<  std::endl <<
+			"disp: Reading Mass offset: " << mOff << std::endl << 
+			"disp: Inertia Tensor per Unit Space: " << iTUS << std::endl);
 
-	#ifdef DEBUG
-		DEBUGCOUT("Setting Automatic Mass" << std::endl << 
-				"reading Value Density per Unity Lenght: " << vDUP <<  std::endl <<
-				"reading Mass offset: " << mOff << std::endl);
-	#endif
-
-
-	/* Allocation */
-
-	const DynamicStructDispNode* pDynamicDispNode1 = 0;
-	const DynamicStructDispNode* pDynamicDispNode2 = 0;
-	const DynamicStructDispNode* pDynamicDispNode3 = 0;
-	const StaticStructDispNode* pStaticDispNode1 = 0;
-	const StaticStructDispNode* pStaticDispNode2 = 0;
-	const StaticStructDispNode* pStaticDispNode3 = 0;
-	const char *sElemName;
-	const char *sNodeName;
-	if (pNode1 && pNode2 && pNode3) {
-		sElemName = "Body";
-		sNodeName = "StructNode";
-	} else {
-		sElemName = "Mass";
-		sNodeName = "StructDispNode";
-	}
-
-	silent_cerr(std::endl << "bStaticModel: " << bStaticModel << std::endl << 
-				"bInverseDynamics: " << bInverseDynamics << std::endl);
-
-
-	// Elem* pEl = NULL;
-	// StaticBody *pSB = 0;
-	// StaticMass *pSM = 0;
-
-	/* static */
-	// if (pStrNode1) {
-	// 	// SAFENEWWITHCONSTRUCTOR(pSB, StaticBody, StaticBody(uLabel, dynamic_cast<const StaticStructNode *>(pStaticDispNode),	dm, Xgc, J, fOut));
-	// 	pEl = pSB;
-	// } else {
-	// 	// SAFENEWWITHCONSTRUCTOR(pSM, StaticMass, StaticMass(uLabel, pStaticDispNode,	dm, fOut));
-	// 	pEl = pSM;
-	// }
-
+	
 	doublereal dm = 0.;
 	ReferenceFrame RF(pStrDispNode1);
 	Vec3 Xgc(::Zero3);
 	Vec3 STmp(::Zero3);
 	Mat3x3 J(::Zero3x3);
-	bool bNegative(false);	
+	bool bNegative(false);
 
+	bool dynamicAnalysis(true);
 
-	if (bStaticModel || bInverseDynamics) {
-		/* static */
+	if (dynamicAnalysis) {
+		const DynamicStructDispNode* pDynamicDispNode = 0;
+		pDynamicDispNode = dynamic_cast<const DynamicStructDispNode*>(pStrDispNode1);
+		const DynamicStructNode* pDynamicStructNode = dynamic_cast<const DynamicStructNode*>(pDynamicDispNode);
 
-	} else {
-		pDynamicDispNode2 = dynamic_cast<const DynamicStructDispNode*>(pStrDispNode1);
-		if (pDynamicDispNode2 == 0 || pDynamicDispNode2->GetStructDispNodeType() != StructDispNode::DYNAMIC) {
-			silent_cerr("StructDispNode::STATIC" << std::endl);
-		} else {
-			silent_cerr("StructDispNode::DYNAMIC" << std::endl);
-		}
-	}
-	
-	if (bStaticModel || bInverseDynamics) {
-
-		if (pNode1 && pNode2 && pNode3) {
-			silent_cerr("Static + pNodes = True" << std::endl);
-		} else {
-			silent_cerr("Static + pNodes = False" << std::endl);
-		}
-		if (bInverseDynamics) {
-			
-		}
-	} else {
-		if (pNode1 && pNode2 && pNode3) {
-			silent_cerr("Dynamic + pNodes = False" << std::endl);
-
-			const DynamicStructNode* pDynamicStructNode = dynamic_cast<const DynamicStructNode*>(pDynamicDispNode2);
-			const ModalNode* pModalNode = dynamic_cast<const ModalNode*>(pDynamicDispNode2);
-			const RigidBodyKinematics* pRBK = pDynamicStructNode->pGetRBK();
-
-			SAFENEWWITHCONSTRUCTOR(pEl, DynamicBody,
+		SAFENEWWITHCONSTRUCTOR(pEl, DynamicBody,
 					DynamicBody(uLabel, pDynamicStructNode, dm, Xgc, J, fOut));
-		} else {
-		}
+	
+	pDM->GetLogFile()
+		<< "body: " << uLabel
+		<< ' ' << pStrDispNode1->GetLabel()
+		<< ' ' << dm
+		<< ' ' << Xgc
+		<< ' ' << J
+		<< std::endl;
 	}
-
 
 	/* Costruttore normale
 	 * Beam(unsigned int uL,

@@ -444,15 +444,6 @@ protected:
 /* Beam - end */
 
 
-// TO-DO
-/* DynamicBody - begin */
-
-// class DynamicBody : virtual public Elem, public Beam {
-// };
-
-/* DynamicBody - end */
-
-
 /* ViscoElasticBeam - begin */
 
 class ViscoElasticBeam : virtual public Elem, public Beam {
